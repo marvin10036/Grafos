@@ -11,19 +11,27 @@
 
 int main(int argc, char** argv)
 {
-  if (argc != 2)
+  if (argc != 3)
   {
-    std::cerr << "Número de parâmetros insuficiente. Espera-se 1."<< std::endl;
+    std::cerr << "Número de parâmetros insuficiente. Espera-se 2."<< std::endl;
+    std::cerr << "arquivo_grafo.net numero_vertice_inicial"<< std::endl;
     return 1;
   }
 
   HashesVectorGraph graph = HashesVectorGraph();
+
   int status_code = loadFile(argc, argv, graph);
+  if (status_code != 0)
+  {
+    return 1;
+  }
 
-  // std::cout<< graph.qtdVertices() << std::endl;
-  // std::cout<< graph.qtdArestas() << std::endl;
+  std::cout<< graph.qtdVertices() << std::endl;
+  std::cout<< graph.qtdArestas() << std::endl;
 
-  // BFS(graph, std::stol(argv[2]));
+  BFS(graph, std::stol(argv[2]));
+  dijkstra(graph, std::stol(argv[2]));
+  hierholzer(graph);
   // Não consigo representar multigrafo na minha estrutura de dados
   floydWarshall(graph);
 
