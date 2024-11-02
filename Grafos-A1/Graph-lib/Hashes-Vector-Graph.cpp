@@ -42,18 +42,26 @@ std::shared_ptr<Node> HashesVectorGraph::getNodeAtIndex(const long node_index)
   return node;
 }
 
+// TODO, Estou esperançosamente esperando que os indices venham em ordem
 void HashesVectorGraph::addNode(const long node_index, const std::string& node_data)
 {
-  // TODO Insert pode dar problemas se uma operação de inserção for repetida em index já usado
-  std::shared_ptr<Node> x = std::make_shared<Node>(node_data);
-
-  // TODO, Estou esperançosamente esperando que os indices venham em ordem
+  // Inserindo em posição ainda não alocada
   if (node_index > graph_nodes.size()) 
   {
     graph_nodes.resize(node_index);
+    graph_nodes.insert(graph_nodes.begin() + node_index, std::make_shared<Node>(node_data));
   }
-
-  graph_nodes.insert(graph_nodes.begin() + node_index, std::make_shared<Node>(node_data));
+  // Reinserindo em posição já existente
+  else if (node_index < graph_nodes.size())
+  {
+    graph_nodes.erase(graph_nodes.begin() + node_index);
+    graph_nodes.insert(graph_nodes.begin() + node_index, std::make_shared<Node>(node_data));
+  }
+  // Inserindo logo a frente
+  else
+  {
+    graph_nodes.push_back(std::make_shared<Node>(node_data));
+  }
 }
 
 void HashesVectorGraph::addEdgeToNode(const long node_index, const long destination_node_index, const double weight)
@@ -80,7 +88,6 @@ long HashesVectorGraph::qtdVertices()
 
 long HashesVectorGraph::qtdArestas()
 {
-  // TODO adicionar caso para digrafo
   return edges_counter/2;
 }
 
@@ -121,13 +128,6 @@ bool HashesVectorGraph::haAresta(const long first_node_index, const long second_
   {
     return true;
   }
-
-  std::map<long, double> second_node_adjacency_list = second_node->getAdjacencyList();
-  if (second_node_adjacency_list.find(first_node_index) != second_node_adjacency_list.end()) 
-  {
-    return true;
-  }
-
   return false;
 }
 

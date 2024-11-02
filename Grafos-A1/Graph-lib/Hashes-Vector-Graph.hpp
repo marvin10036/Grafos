@@ -19,7 +19,6 @@ class Node
     // Curioso, os maps não deram problema algum
     std::map<long, double> adjacency_list;
     std::string node_data;
-    // long node_degree; // Neighborhoods
 
   public:
     Node();
@@ -36,7 +35,7 @@ class HashesVectorGraph
   private:
     // Poderia ser std::vector<Node> graph_nodes, mas o objeto é grande
     std::vector<std::shared_ptr<Node>> graph_nodes;
-    long edges_counter; // TODO, questões digrafo x grafo não dirigido
+    long edges_counter;
 
   public:
     HashesVectorGraph();
