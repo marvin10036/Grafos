@@ -24,10 +24,11 @@ void createNodes(std::ifstream& fd, std::string& stringBuffer, HashesVectorGraph
   }
 }
 
-void createEdges(std::ifstream& fd, std::string& stringBuffer, HashesVectorGraph& graph)
+void createEdges(std::ifstream& fd, std::string& stringBuffer, HashesVectorGraph& graph, bool isDigraph)
 {
   long node_index, destination_node_index;
   double weight;
+
   while(fd >> stringBuffer)
   {
     // Primeiro vertice
@@ -42,8 +43,13 @@ void createEdges(std::ifstream& fd, std::string& stringBuffer, HashesVectorGraph
     weight = std::stod(stringBuffer);
 
     graph.addEdgeToNode(node_index, destination_node_index, weight);
-    // TODO, estou sempre considerando que são grafos não dirigidos
-    graph.addEdgeToNode(destination_node_index, node_index, weight);
+
+    // Caso seja não dirigido
+    if (!isDigraph)
+    {
+      // Adicione a aresta transposta também
+      graph.addEdgeToNode(destination_node_index, node_index, weight);
+    }
   }
 }
 
@@ -66,7 +72,11 @@ int loadFile(int argc, char** argv, HashesVectorGraph& graph)
     }
     if (stringBuffer == "*edges")
     {
-      createEdges(fd, stringBuffer, graph);
+      createEdges(fd, stringBuffer, graph, false);
+    }
+    if (stringBuffer == "*arcs")
+    {
+      createEdges(fd, stringBuffer, graph, true);
     }
   }
   fd.close();
